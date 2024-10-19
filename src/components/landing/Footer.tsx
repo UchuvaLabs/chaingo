@@ -210,7 +210,7 @@ const Footer = () => {
                 </defs>
               </svg>
             </a>
-            <a href="https://github.com/UchuvaLabs/chaingo/tree/main">
+            <a href="https://www.instagram.com/chaingo_" target="_blank">
               <svg
                 className="w-6 h-6 hover:text-accent duration-150"
                 fill="currentColor"
