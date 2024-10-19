@@ -5,3 +5,7 @@
 body {
   @apply font-sans; /* Aplica la fuente 'sans' a todo el cuerpo */
 }
+
+html {
+  scroll-behavior: smooth;
+}
