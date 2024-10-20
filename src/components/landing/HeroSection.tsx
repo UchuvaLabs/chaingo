@@ -4,11 +4,11 @@ const HeroSection = () => {
       <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
         <div className="mr-auto place-self-center lg:col-span-7">
           <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-            Comunication tool for{" "}
+            Communication tool for{" "}
             <span className="text-accent"> blockchain</span> developers
           </h1>
           <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-            Make communication between Avalanche L1 blockchains much easier with
+            Make commmunication between Avalanche L1 blockchains much easier with
             ChainGo.
           </p>
           <a
@@ -31,7 +31,8 @@ const HeroSection = () => {
           </a>
         </div>
         <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-          <img src="/src/assets/img/hero-image.png" alt="mockup" />
+          {/* <img src="/src/assets/img/hero-image.png" alt="mockup" /> */}
+          <img src="/src/assets/img/chaingov1.png" alt="mockup" />
         </div>
       </div>
     </section>
