@@ -1,55 +1,25 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { receiverTemplate, senderTemplate } from "./templates.toolkit";
 
-
-const genAI = new GoogleGenerativeAI('AIzaSyDQDFt2lmPJ92aFOseX7VMts2_aPgyyvOI');
-
+const genAI = new GoogleGenerativeAI("AIzaSyDQDFt2lmPJ92aFOseX7VMts2_aPgyyvOI");
 
 interface ModelResponse {
   response: {
-    text: () => string; 
+    text: () => string;
   };
 }
 
 export const generateIntegrationFunction = async (
   senderCode: string,
   receiverCode: string,
-  context: string
-): Promise<{ senderFile: string; receiverFile: string }> => {
-  
-  
-  const senderTemplate = `
-    // Plantilla para el contrato Sender
-    // SPDX-License-Identifier: MIT
-    pragma solidity ^0.8.18;
-
-    contract Sender {
-        function sendToReceiver(address receiver, uint256 amount) public {
-            emit Sent(receiver, amount);
-        }
-
-        event Sent(address indexed receiver, uint256 amount);
-    }
-  `;
-
-
-  const receiverTemplate = `
-    // Plantilla para el contrato Receiver
-    // SPDX-License-Identifier: MIT
-    pragma solidity ^0.8.18;
-
-    contract Receiver {
-        function receiveFromSender(uint256 amount) public {
-            emit Received(msg.sender, amount);
-        }
-
-        event Received(address indexed sender, uint256 amount);
-    }
-  `;
-
-
+  context: string,
+  receiverChainId: string
+): Promise<{ senderContract: string; receiverContract: string }> => {
   const prompt = `
   Contexto:
   ${context}
+
+  El Chain ID correspondiente al contrato que recibe es: ${receiverChainId}
 
   Por favor, toma el siguiente código del contrato de Sender:
   ${senderCode}
@@ -68,24 +38,29 @@ export const generateIntegrationFunction = async (
 `;
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt) as ModelResponse;
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = (await model.generateContent(prompt)) as ModelResponse;
 
-    if (!result.response || typeof result.response.text !== 'function') {
-      throw new Error('No se recibió una respuesta válida del modelo.');
+    if (!result.response || typeof result.response.text !== "function") {
+      throw new Error("No se recibió una respuesta válida del modelo.");
     }
 
-    const responseText = result.response.text(); 
-    const contracts = responseText.split('\n\n'); 
+    const responseText = result.response.text();
+    const contracts = responseText.split("\n\n");
     if (contracts.length < 2) {
-      throw new Error('No se encontraron suficientes contratos en la respuesta.');
+      throw new Error(
+        "No se encontraron suficientes contratos en la respuesta."
+      );
     }
 
     return {
-      senderFile: contracts[0].trim(),  
-      receiverFile: contracts[1].trim(), 
+      senderContract: contracts[0].trim(),
+      receiverContract: contracts[1].trim(),
     };
   } catch (error) {
-    throw new Error('Error generando los contratos: ' + (error instanceof Error ? error.message : String(error)));
+    throw new Error(
+      "Error generando los contratos: " +
+        (error instanceof Error ? error.message : String(error))
+    );
   }
 };
