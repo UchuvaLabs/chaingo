@@ -1,16 +1,51 @@
+import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import logo from "../../assets/img/chaingov1.png";
+
 const HeroSection = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: MouseEvent) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  const x = mousePosition.x / window.innerWidth - 0.5;
+  const y = mousePosition.y / window.innerHeight - 0.5;
+
   return (
     <section className="bg-white dark:bg-background">
       <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
         <div className="mr-auto place-self-center lg:col-span-7">
-          <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+          <motion.h1
+            className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
             Communication tool for{" "}
-            <span className="text-accent"> blockchain</span> developers
-          </h1>
-          <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-            Make commmunication between Avalanche L1 blockchains much easier with
+            <span className="text-accent">blockchain</span> developers
+          </motion.h1>
+          <motion.p
+            className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+            Make communication between Avalanche L1 blockchains much easier with
             ChainGo.
-          </p>
+          </motion.p>
           <a
             href="#functions"
             className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-background rounded-lg bg-accent hover:bg-[#d99a07] focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
@@ -23,16 +58,33 @@ const HeroSection = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </a>
         </div>
-        <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-          {/* <img src="/src/assets/img/hero-image.png" alt="mockup" /> */}
-          <img src="/src/assets/img/chaingov1.png" alt="mockup" />
+
+        <div
+          className="hidden lg:mt-0 lg:col-span-5 lg:flex"
+          style={{
+            transform: `translate3d(${x * 15}px, ${y * 15}px, 0)`,
+            transition: "transform 0.5s ease-out",
+          }}
+        >
+          <motion.img
+            src={logo}
+            alt="mockup"
+            className="w-full max-w-xl h-auto"
+            animate={{ y: [-10, 10, -10] }}
+            transition={{
+              duration: 4,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+          />
         </div>
       </div>
     </section>
