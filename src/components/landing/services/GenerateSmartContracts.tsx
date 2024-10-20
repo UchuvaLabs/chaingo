@@ -90,7 +90,7 @@ const GenerateSmartContracts = () => {
 
         <div className="mb-6">
           <h2 className="text-primaryText text-lg font-semibold mb-2">
-            Destination Chain ID
+            Destination Blockchain ID (HEX)
           </h2>
           <p className="text-secondaryText mb-4">
             Specify the chain ID of the destination blockchain where the smart

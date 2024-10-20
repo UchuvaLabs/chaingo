@@ -116,7 +116,7 @@ const GenerateTemplate = () => {
 
         <div>
           <label className="text-primaryText block mb-1">
-            Destination Chain ID
+            Destination Blockchain ID (HEX)
           </label>
           <input
             type="text"
