@@ -1,12 +1,9 @@
-// (c) 2023, Ava Labs, Inc. All rights reserved.
-// See the file LICENSE for licensing terms.
-
 // SPDX-License-Identifier: Ecosystem
 
 pragma solidity ^0.8.18;
 
-import "@teleporter/ITeleporterMessenger.sol";
-import "@teleporter/ITeleporterReceiver.sol";
+import "./ITeleporterMessenger.sol";
+import "./ITeleporterReceiver.sol";
 
 contract WinnerContract is ITeleporterReceiver {
     ITeleporterMessenger public immutable messenger = ITeleporterMessenger(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
