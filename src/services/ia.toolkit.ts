@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-
 const genAI = new GoogleGenerativeAI('AIzaSyDQDFt2lmPJ92aFOseX7VMts2_aPgyyvOI');
-
 
 interface ModelResponse {
   response: {
@@ -13,10 +11,10 @@ interface ModelResponse {
 export const generateIntegrationFunction = async (
   senderCode: string,
   receiverCode: string,
-  context: string
+  context: string,
+  receiverChainId: string 
 ): Promise<{ senderFile: string; receiverFile: string }> => {
-  
-  
+
   const senderTemplate = `
     // Plantilla para el contrato Sender
     // SPDX-License-Identifier: MIT
@@ -30,7 +28,6 @@ export const generateIntegrationFunction = async (
         event Sent(address indexed receiver, uint256 amount);
     }
   `;
-
 
   const receiverTemplate = `
     // Plantilla para el contrato Receiver
@@ -46,10 +43,12 @@ export const generateIntegrationFunction = async (
     }
   `;
 
-
+  
   const prompt = `
   Contexto:
   ${context}
+
+  El Chain ID correspondiente al contrato que recibe es: ${receiverChainId}
 
   Por favor, toma el siguiente código del contrato de Sender:
   ${senderCode}
