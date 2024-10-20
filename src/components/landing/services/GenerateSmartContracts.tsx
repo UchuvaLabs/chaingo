@@ -26,6 +26,23 @@ const GenerateSmartContracts = () => {
 
       <div className="mb-6">
         <h2 className="text-primaryText text-lg font-semibold mb-2">
+          Destination Chain ID
+        </h2>
+        <p className="text-secondaryText mb-4">
+          Specify the chain ID of the destination blockchain where the smart
+          contract interaction will be executed.
+        </p>
+        <input
+          type="text"
+          className="w-full p-3 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+          placeholder="Enter Destination Chain ID"
+        />
+      </div>
+
+      <hr className="border-border my-6" />
+
+      <div className="mb-6">
+        <h2 className="text-primaryText text-lg font-semibold mb-2">
           Sender Smart Contract
         </h2>
         <p className="text-secondaryText mb-4">
