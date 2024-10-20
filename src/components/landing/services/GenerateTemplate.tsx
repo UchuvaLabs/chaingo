@@ -22,6 +22,62 @@ const GenerateTemplate = () => {
     setParams(newParams);
   };
 
+  const solidityDataTypes: string[] = [
+    "bool",
+    "uint8",
+    "uint16",
+    "uint32",
+    "uint64",
+    "uint128",
+    "uint256",
+    "int8",
+    "int16",
+    "int32",
+    "int64",
+    "int128",
+    "int256",
+    "address",
+    "address payable",
+    "bytes1",
+    "bytes2",
+    "bytes3",
+    "bytes4",
+    "bytes5",
+    "bytes6",
+    "bytes7",
+    "bytes8",
+    "bytes9",
+    "bytes10",
+    "bytes11",
+    "bytes12",
+    "bytes13",
+    "bytes14",
+    "bytes15",
+    "bytes16",
+    "bytes17",
+    "bytes18",
+    "bytes19",
+    "bytes20",
+    "bytes21",
+    "bytes22",
+    "bytes23",
+    "bytes24",
+    "bytes25",
+    "bytes26",
+    "bytes27",
+    "bytes28",
+    "bytes29",
+    "bytes30",
+    "bytes31",
+    "bytes32",
+    "bytes",
+    "string",
+    "enum",
+    "mapping",
+    "uint[5]",
+    "uint[]",
+  ];
+
   return (
     <section className="max-w-3xl mx-auto p-6 bg-cardBackground rounded-lg shadow-lg mb-6">
       <h1 className="text-accent text-center font-bold text-2xl mb-6">
@@ -64,6 +120,21 @@ const GenerateTemplate = () => {
           </div>
         </div>
 
+        <div>
+          <label className="text-primaryText block mb-1">
+            Destination Chain ID
+          </label>
+          <input
+            type="text"
+            placeholder="Enter Destination Chain ID"
+            className="w-full p-2 border border-border rounded-md bg-background text-primaryText"
+          />
+          <p className="text-secondaryText mt-2">
+            Specify the destination blockchain network's chain ID where the
+            receiver contract is located.
+          </p>
+        </div>
+
         <hr className="border-border my-4" />
 
         <div className="flex items-center justify-between">
@@ -92,13 +163,22 @@ const GenerateTemplate = () => {
                 onChange={(e) => handleChange(index, "name", e.target.value)}
                 className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText"
               />
-              <input
-                type="text"
-                placeholder="Parameter type"
+
+              <select
                 value={param.type}
                 onChange={(e) => handleChange(index, "type", e.target.value)}
                 className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText"
-              />
+              >
+                <option value="" disabled>
+                  Select type
+                </option>
+                {solidityDataTypes.map((type, i) => (
+                  <option key={i} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+
               <button
                 type="button"
                 onClick={() => handleRemoveParam(index)}
