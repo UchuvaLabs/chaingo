@@ -1,7 +1,23 @@
 import { useState } from "react";
+import { saveAs } from "file-saver";
+import { useNavigate } from "react-router-dom";
+import JSZip from "jszip";
+
+import {
+  ITeleporterMessenger,
+  ITeleporterReceiver,
+  generateSenderContract,
+  generateReceiverContract,
+} from "../../../services/templates.toolkit";
+import { solidityDataTypes } from "../../../data/solidity.types";
 
 const GenerateTemplate = () => {
+  const [nameSend, setNameSend] = useState("");
+  const [nameReceive, setNameReceive] = useState("");
+  const [chainId, setChainId] = useState("");
   const [params, setParams] = useState([{ name: "", type: "" }]);
+
+  const navigate = useNavigate();
 
   const handleAddParam = () => {
     setParams([...params, { name: "", type: "" }]);
@@ -22,61 +38,35 @@ const GenerateTemplate = () => {
     setParams(newParams);
   };
 
-  const solidityDataTypes: string[] = [
-    "bool",
-    "uint8",
-    "uint16",
-    "uint32",
-    "uint64",
-    "uint128",
-    "uint256",
-    "int8",
-    "int16",
-    "int32",
-    "int64",
-    "int128",
-    "int256",
-    "address",
-    "address payable",
-    "bytes1",
-    "bytes2",
-    "bytes3",
-    "bytes4",
-    "bytes5",
-    "bytes6",
-    "bytes7",
-    "bytes8",
-    "bytes9",
-    "bytes10",
-    "bytes11",
-    "bytes12",
-    "bytes13",
-    "bytes14",
-    "bytes15",
-    "bytes16",
-    "bytes17",
-    "bytes18",
-    "bytes19",
-    "bytes20",
-    "bytes21",
-    "bytes22",
-    "bytes23",
-    "bytes24",
-    "bytes25",
-    "bytes26",
-    "bytes27",
-    "bytes28",
-    "bytes29",
-    "bytes30",
-    "bytes31",
-    "bytes32",
-    "bytes",
-    "string",
-    "enum",
-    "mapping",
-    "uint[5]",
-    "uint[]",
-  ];
+  const contractStrings = [ITeleporterReceiver, ITeleporterMessenger];
+
+  const submitHandler = async (e: any) => {
+    e.preventDefault();
+    const senderContract = generateSenderContract(nameSend, chainId, params);
+    const receiverContract = generateReceiverContract(nameReceive, params);
+
+    contractStrings.push(senderContract, receiverContract);
+
+    downloadZip();
+    navigate("/result", {
+      state: { senderContract, receiverContract },
+    });
+  };
+
+  const downloadZip = async () => {
+    const zip = new JSZip();
+    const folder = zip.folder("contracts");
+
+    if (folder) {
+      folder.file(`ITeleporterReceiver.sol`, contractStrings[0]);
+      folder.file(`ITeleporterMessenger.sol`, contractStrings[1]);
+      folder.file(`${nameSend}-sender.sol`, contractStrings[2]);
+      folder.file(`${nameReceive}-receiver.sol`, contractStrings[3]);
+
+      const blob = await zip.generateAsync({ type: "blob" });
+      saveAs(blob, "contracts.zip");
+    }
+  };
 
   return (
     <section className="max-w-3xl mx-auto p-6 bg-cardBackground rounded-lg shadow-lg mb-6">
@@ -92,14 +82,16 @@ const GenerateTemplate = () => {
         enabling seamless data interaction on the Avalanche blockchain.
       </p>
 
-      <form className="flex flex-col space-y-6">
+      <form onSubmit={submitHandler} className="flex flex-col space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-primaryText block mb-1">Send</label>
             <input
               type="text"
               placeholder="Sender smart contract name"
-              className="w-full p-2 border border-border rounded-md bg-background text-primaryText"
+              className="w-full p-2 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+              onChange={(e) => setNameSend(e.target.value)}
+              required
             />
             <p className="text-secondaryText mt-2">
               Enter the name of the smart contract responsible for sending or
@@ -111,7 +103,9 @@ const GenerateTemplate = () => {
             <input
               type="text"
               placeholder="Receiver smart contract name"
-              className="w-full p-2 border border-border rounded-md bg-background text-primaryText"
+              className="w-full p-2 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+              onChange={(e) => setNameReceive(e.target.value)}
+              required
             />
             <p className="text-secondaryText mt-2">
               Enter the name of the smart contract that will receive or respond
@@ -127,7 +121,9 @@ const GenerateTemplate = () => {
           <input
             type="text"
             placeholder="Enter Destination Chain ID"
-            className="w-full p-2 border border-border rounded-md bg-background text-primaryText"
+            className="w-full p-2 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            onChange={(e) => setChainId(e.target.value)}
+            required
           />
           <p className="text-secondaryText mt-2">
             Specify the destination blockchain network's chain ID where the
@@ -161,13 +157,15 @@ const GenerateTemplate = () => {
                 placeholder="Parameter name"
                 value={param.name}
                 onChange={(e) => handleChange(index, "name", e.target.value)}
-                className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText"
+                className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                required
               />
 
               <select
                 value={param.type}
                 onChange={(e) => handleChange(index, "type", e.target.value)}
-                className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText"
+                className="flex-grow p-2 border border-border rounded-md bg-background text-primaryText focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                required
               >
                 <option value="" disabled>
                   Select type
