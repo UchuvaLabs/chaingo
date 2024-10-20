@@ -21,6 +21,8 @@ export const generateIntegrationFunction = async (
 
   El Chain ID correspondiente al contrato que recibe es: ${receiverChainId}
 
+  El Chain ID correspondiente al contrato que recibe es: ${receiverChainId}
+
   Por favor, toma el siguiente código del contrato de Sender:
   ${senderCode}
 
