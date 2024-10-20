@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import "@teleporter/ITeleporterMessenger.sol";
+import "./ITeleporterMessenger.sol";
 
 /* Your sc */
 contract SimpleGame {
