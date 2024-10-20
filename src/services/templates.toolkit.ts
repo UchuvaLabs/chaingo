@@ -1,16 +1,23 @@
-export function generateSenderContract(contractName: string, destinationChainID: string, listParams: Array<Record<string, string>>): string {
-    let paramsToSend: string = generateStringParams(listParams);
-    return senderTemplate
-        .replace("{{SENDER_CONTRACT_NAME}}", contractName)
-        .replace("{{DESTINATION_CHAIN_ID}}", destinationChainID)
-        .replace("{{PARAMS_TO_SEND}}", paramsToSend);
+export function generateSenderContract(
+  contractName: string,
+  destinationChainID: string,
+  listParams: Array<Record<string, string>>
+): string {
+  let paramsToSend: string = generateStringParams(listParams);
+  return senderTemplate
+    .replace(/{{SENDER_CONTRACT_NAME}}/g, contractName)
+    .replace(/{{DESTINATION_CHAIN_ID}}/g, destinationChainID)
+    .replace(/{{PARAMS_TO_SEND}}/g, paramsToSend);
 }
 
-export function generateReceiverContract(contractName: string, listParams: Array<Record<string, string>>): string {
-    let paramsToReceive: string = generateStringParams(listParams);
-    return receiverTemplate
-        .replace("{{RECEIVER_CONTRACT_NAME}}", contractName)
-        .replace("{{PARAMS_TO_RECEIVE}}", paramsToReceive);
+export function generateReceiverContract(
+  contractName: string,
+  listParams: Array<Record<string, string>>
+): string {
+  let paramsToReceive: string = generateStringParams(listParams);
+  return receiverTemplate
+    .replace(/{{RECEIVER_CONTRACT_NAME}}/g, contractName)
+    .replace(/{{PARAMS_TO_RECEIVE}}/g, paramsToReceive);
 }
 
 // Plantilla del contrato Sender (genérico, sin lógica específica)
@@ -64,22 +71,23 @@ contract {{RECEIVER_CONTRACT_NAME}} is ITeleporterReceiver {
 }
 `;
 
-export function generateStringParams(listParams: Array<Record<string, string>>): string{
-    let baseString= "";
-    let separator = ", ";
-    for(let i=0; i<listParams.length; i++){
-        if (i<listParams.length){
-            separator="";
-        }
-        baseString = baseString + listParams[i]["type"] + " " + listParams[i]["name"] + separator;
-    }
-    return baseString;
-}
+export function generateStringParams(
+  listParams: Array<Record<string, string>>
+): string {
+  let baseString = "";
+  let separator = ", ";
 
+  for (let i = 0; i < listParams.length; i++) {
+    baseString += listParams[i]["type"] + " " + listParams[i]["name"];
+    if (i < listParams.length - 1) {
+      baseString += separator;
+    }
+  }
+  return baseString;
+}
 
 //const senderContract = generateSenderContract("MySenderContract", "0x123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234", "uint256 param1, address param2");
 //const receiverContract = generateReceiverContract("MyReceiverContract", "uint256 param1, address param2");
-
 
 export const ITeleporterMessenger = `
 // (c) 2023, Ava Labs, Inc. All rights reserved.
